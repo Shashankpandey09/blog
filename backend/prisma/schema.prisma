@@ -22,7 +22,7 @@ model User{
 }
 model Blog{
   id Int @id @default(autoincrement())
-  authorId Int
+  authorId Int  @unique
   title String
   Content String
   Thumbnail String?
