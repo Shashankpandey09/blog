@@ -27,5 +27,6 @@ model Blog{
   Content String
   Thumbnail String?
   published Boolean @default(false)
+  createdAt DateTime @default(now())
   author User @relation(fields: [authorId],references: [id]) 
 }

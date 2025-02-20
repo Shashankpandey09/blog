@@ -96,14 +96,38 @@ blogRouter.put("/:id", async (c) => {
 // pagination required
 blogRouter.get("/bulk", async (c) => {
   const prisma = c.get("prisma");
+  const page=c.req.query("page")||1;
+  const limit=c.req.query("limit")||5;
+ // checking for input validation
+ if(Number(page) < 1||Number(limit) < 1){
+  c.status(400)
+  return c.json({
+    message:"Invalid pagination parameter"
+  })
+ }
+ const skip=(Number(page)-1)*Number(limit)
   try {
-    const res = await prisma.blog.findMany();
-    if (!res) {
+    const [blogs,total]=await Promise.all([
+      prisma.blog.findMany({
+        skip:skip,
+        take:Number(limit),
+        orderBy:{createdAt:'desc'}
+      }),
+      prisma.blog.count()
+    ])
+    const pages=Math.ceil(total/Number(limit))
+    if (!blogs) {
       c.status(404);
       return c.text("blogs not found");
     }
     return c.json({
-      message: res,
+      response:{
+        blogs:blogs,
+        totalBlogs:total,
+        totalPages:pages,
+        hasNextPage:(Number(page) <=pages),
+        hasPreviousPage:(Number(page)>1)
+      } 
     });
   } catch (error: any) {
     c.status(500);
