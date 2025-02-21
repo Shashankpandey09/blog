@@ -1,8 +1,7 @@
 import { Hono } from "hono";
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
 import { sign } from "hono/jwt";
 import { createPrismaClient } from "..";
+import { userSignUpSchema,userSignInSchema,userSignUpSchemaType, userSignInSchemaType } from "@shashankpandey/blogscommon";
 
 // 1. Define proper types
 type AppVariables = {
@@ -25,9 +24,16 @@ export const UserRouter = new Hono<{
 // 4. Use middleware-injected Prisma in both routes
 UserRouter.post("/signup", async (c) => {
   const prisma = c.get("prisma");
-  const body = await c.req.json();
+  const body:userSignUpSchemaType = await c.req.json();
   
   try {
+    const {success,error}=userSignUpSchema.safeParse(body)
+    if(!success){
+      c.status(400)
+      return c.json({
+       error:error.issues
+      })
+    }
     const user = await prisma.user.create({
       data: {
         name: body.name,
@@ -50,11 +56,19 @@ UserRouter.post("/signup", async (c) => {
 
 UserRouter.post("/signin", async (c) => {
   const prisma = c.get("prisma");
-  const body = await c.req.json();
+  const body:userSignInSchemaType = await c.req.json();
 
   try {
+    const SignInParse=userSignInSchema.safeParse(body)
+    if(!SignInParse.success){
+      c.status(400)
+      return c.json({
+        message:'Error',
+        Error:SignInParse.error.issues
+      })
+    }
     const user = await prisma.user.findUnique({
-      where: { email: body.email },
+      where: { email: body.email, password:body.password },
     });
 
     if (!user) {

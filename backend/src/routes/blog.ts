@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { JWTPayload } from "hono/utils/jwt/types";
 import { createPrismaClient } from "..";
 import { payloadExtractor } from "../middleware/tokenExtracter";
+import { blogSchema,blogSchemaType } from "@shashankpandey/blogscommon";
 
 type AppVariables = {
   prisma: ReturnType<typeof createPrismaClient>;
@@ -39,11 +40,19 @@ blogRouter.use("/*", async (c, next) => {
 
 blogRouter.post("/", async (c) => {
   const prisma = c.get("prisma");
-  const body = await c.req.json();
+  const body:blogSchemaType = await c.req.json();
   const payload = c.get("payload");
 
   const id = Number(payload["id"]);
   try {
+    const blogParse=blogSchema.safeParse(body)
+    if(!blogParse.success){
+      c.status(400);
+      return c.json({
+        message:'error',
+        error:blogParse.error.issues
+      })
+    }
     const res = await prisma.blog.create({
       data: {
         authorId: id,
@@ -63,10 +72,18 @@ blogRouter.post("/", async (c) => {
 });
 blogRouter.put("/:id", async (c) => {
   const prisma = c.get("prisma");
-  const body = await c.req.json();
+  const body:blogSchemaType = await c.req.json();
   const id = c.req.param("id");
   const payload = c.get("payload");
   try {
+    const blogParse=blogSchema.safeParse(body)
+    if(!blogParse.success){
+      c.status(400);
+      return c.json({
+        message:'error',
+        error:blogParse.error.issues
+      })
+    }
     const res = await prisma.blog.update({
       where: { id: Number(id), authorId: Number(payload.id) },
       data: {

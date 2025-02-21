@@ -9,7 +9,7 @@ export declare const userSignInSchema: z.ZodObject<{
     email: string;
     password: string;
 }>;
-export type userSignUpSchemaType = z.infer<typeof userSignInSchema>;
+export type userSignInSchemaType = z.infer<typeof userSignInSchema>;
 export declare const userSignUpSchema: z.ZodObject<{
     name: z.ZodOptional<z.ZodString>;
     email: z.ZodString;
@@ -23,21 +23,21 @@ export declare const userSignUpSchema: z.ZodObject<{
     password: string;
     name?: string | undefined;
 }>;
-export type userSignInSchemaType = z.infer<typeof userSignInSchema>;
+export type userSignUpSchemaType = z.infer<typeof userSignUpSchema>;
 export declare const blogSchema: z.ZodObject<{
     title: z.ZodString;
     content: z.ZodString;
-    Thumbnail: z.ZodOptional<z.ZodString>;
+    Thumbnail: z.ZodOptional<z.ZodAny>;
     published: z.ZodBoolean;
 }, "strip", z.ZodTypeAny, {
     title: string;
     content: string;
     published: boolean;
-    Thumbnail?: string | undefined;
+    Thumbnail?: any;
 }, {
     title: string;
     content: string;
     published: boolean;
-    Thumbnail?: string | undefined;
+    Thumbnail?: any;
 }>;
 export type blogSchemaType = z.infer<typeof blogSchema>;

@@ -1,4 +1,3 @@
-
 import { verify } from "hono/jwt";
 
 export const payloadExtractor=async(token:string,JWT_SECRET:string)=>{
