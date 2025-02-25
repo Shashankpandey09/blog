@@ -33,6 +33,6 @@ model Blog{
 }
 model Tags{
   id Int @id @default(autoincrement())
-  tagName String 
+  tagName String @unique
   blogs Blog []
 }

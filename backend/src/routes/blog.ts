@@ -42,8 +42,8 @@ blogRouter.post("/", async (c) => {
   const prisma = c.get("prisma");
   const body:blogSchemaType = await c.req.json();
   const payload = c.get("payload");
-
   const id = Number(payload["id"]);
+  const categories=body.tags
   try {
     const blogParse=blogSchema.safeParse(body)
     if(!blogParse.success){
@@ -53,6 +53,15 @@ blogRouter.post("/", async (c) => {
         error:blogParse.error.issues
       })
     }
+     //checking wether the retrieved tags exist or not if it does not exist create it in the database
+     const tagPromise=(categories??[]).map((name)=>
+       prisma.tags.upsert({
+        where:{tagName:name},
+        update:{},
+        create:{tagName:name}
+      })
+     )
+     const tagsArray=await Promise.all(tagPromise)
     const res = await prisma.blog.create({
       data: {
         authorId: id,
@@ -60,7 +69,13 @@ blogRouter.post("/", async (c) => {
         Content: body.content,
         Thumbnail: body.Thumbnail,
         published: body.published,
+        tags:{
+          connect:tagsArray.map(tags=>({id:tags.id}))
+        }
       },
+      include:{
+        tags:true
+      }
     });
     return c.json({
       message: res,
@@ -75,6 +90,8 @@ blogRouter.put("/:id", async (c) => {
   const body:blogSchemaType = await c.req.json();
   const id = c.req.param("id");
   const payload = c.get("payload");
+  const newTags= body.tags;
+ 
   try {
     const blogParse=blogSchema.safeParse(body)
     if(!blogParse.success){
@@ -84,6 +101,26 @@ blogRouter.put("/:id", async (c) => {
         error:blogParse.error.issues
       })
     }
+    const currentTags=await prisma.tags.findMany({
+      where:{
+        blogs:{
+          some:{id:Number(id)}
+        }
+      }
+    }) 
+    const currentTagsNames=currentTags?.map((data)=>(data.tagName))
+    const tagsToAdd =newTags?.filter((tag)=>currentTagsNames.indexOf(tag)===-1);
+    const TagstoRemove=currentTagsNames?.filter((tagname)=>newTags?.indexOf(tagname)===-1)
+
+    const tagPromise=(tagsToAdd??[]).map((name)=>
+     prisma.tags.upsert({
+     where:{tagName:name},
+     update:{},
+     create:{tagName:name}
+     })
+    )
+    const TagsToConnect=await Promise.all(tagPromise);
+  
     const res = await prisma.blog.update({
       where: { id: Number(id), authorId: Number(payload.id) },
       data: {
@@ -91,7 +128,14 @@ blogRouter.put("/:id", async (c) => {
         Content: body.content,
         Thumbnail: body.Thumbnail,
         published: body.published,
+        tags:{
+          connect:TagsToConnect?.map((tags)=>({id:tags.id})),
+          disconnect:TagstoRemove?.map((tags)=>({tagName:tags}))
+        }
       },
+      include:{
+        tags:true
+      }
     });
     if (!res) {
       c.status(404);
@@ -128,7 +172,8 @@ blogRouter.get("/bulk", async (c) => {
       prisma.blog.findMany({
         skip:skip,
         take:Number(limit),
-        orderBy:{createdAt:'desc'}
+        orderBy:{createdAt:'desc'},
+        include:{tags:true}
       }),
       prisma.blog.count()
     ])
@@ -142,7 +187,7 @@ blogRouter.get("/bulk", async (c) => {
         blogs:blogs,
         totalBlogs:total,
         totalPages:pages,
-        hasNextPage:(Number(page) <=pages),
+        hasNextPage:(Number(page) <pages),
         hasPreviousPage:(Number(page)>1)
       } 
     });
@@ -159,6 +204,7 @@ blogRouter.get("/:id", async (c) => {
   try {
     const res = await prisma.blog.findFirst({
       where: { id: Number(id) },
+      include:{tags:true}
     });
     if (!res) {
       c.status(404);
