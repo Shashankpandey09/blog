@@ -201,9 +201,10 @@ blogRouter.get("/bulk", async (c) => {
 blogRouter.get("/:id", async (c) => {
   const id = c.req.param("id");
   const prisma = c.get("prisma");
+  const author=c.get("payload")
   try {
     const res = await prisma.blog.findFirst({
-      where: { id: Number(id) },
+      where: { id: Number(id) , authorId:Number(author.id)},
       include:{tags:true}
     });
     if (!res) {
@@ -226,9 +227,10 @@ blogRouter.get("/:id", async (c) => {
 blogRouter.delete("/delete/:id", async (c) => {
   const prisma = c.get("prisma");
   const id = c.req.param("id");
+  const author=c.get("payload")
   try {
     await prisma.blog.delete({
-      where: { id: Number(id) },
+      where: { id: Number(id) ,authorId:Number(author.id)},
     });
     return c.json({
       message: "deleted successfully",

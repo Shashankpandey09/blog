@@ -29,10 +29,10 @@ model Blog{
   published Boolean @default(false)
   createdAt DateTime @default(now())
   author User @relation(fields: [authorId],references: [id]) 
-  tags Tags[]
+  tags Tags[] 
 }
 model Tags{
   id Int @id @default(autoincrement())
   tagName String @unique
-  blogs Blog []
+  blogs Blog [] 
 }
