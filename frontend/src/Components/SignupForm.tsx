@@ -2,94 +2,121 @@ import { ChangeEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import LabelInputs from "./Labelnput";
 import { userSignInSchemaType, userSignUpSchemaType } from "@shashankpandey/blogscommon";
-const SignupForm = ({type}:{type:'signup'|'signin'}) => {
-  const [Inputs, setInputs] = useState<userSignUpSchemaType|userSignInSchemaType>({
+const SignupForm = ({ type }: { type: 'signup' | 'signin' }) => {
+  const [inputs, setInputs] = useState<userSignUpSchemaType | userSignInSchemaType>({
     name: "",
     email: "",
     password: "",
   });
+
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(Inputs,e.target);
-    
+    console.log(inputs, e.target);
   };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInputs((prev:userSignUpSchemaType) => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <section className="bg-gray-50  dark:bg-gray-900">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-        {/* Form Container */}
-        <div className="w-full bg-white rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 sm:max-w-md">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            {/* Form Title */}
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-            {type==='signup'?'Create Your Account':'Login To Your Account'}
-            </h1>
+    <section className="h-screen bg-[#1A1A1A] flex items-center justify-center p-6">
+      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Form Section */}
+        <div className="bg-[#2D2D2D] border-2 border-[#404040] rounded-xl p-8 hover:border-[#d4a373] transition-colors">
+          <div className="space-y-1 mb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-3 h-3 rounded-full bg-[#d4a373] animate-pulse" />
+              <h1 className="font-pixel text-2xl text-[#E5E5E5]">
+                {type === 'signup' ? 'CREATE_ACCOUNT' : 'ACCESS_PORTAL'}
+              </h1>
+            </div>
+            <p className="text-[#A3A3A3] font-mono text-sm">
+              {type === 'signup' 
+                ? 'Join the developer collective' 
+                : 'Welcome back, operator'}
+            </p>
+          </div>
 
-            {/* Form */}
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-              {/* name Input */}
-             {type==='signup'&& <div>
-                <LabelInputs
-                  label={"name"}
-                  placeholder={"Enter Your name"}
-                  OnChange={(e) => {
-                    setInputs((Inputs: userSignUpSchemaType) => ({
-                      ...Inputs,
-                      name: e.target.value,
-                    }));
-                  }}
-                />
-              </div>}
-              {/* Email Input */}
-              <div>
-                <LabelInputs
-                  label={"email"}
-                  type={"email"}
-                  placeholder={"@gmail.com"}
-                  OnChange={(e) => {
-                    setInputs((Inputs: userSignUpSchemaType) => ({
-                      ...Inputs,
-                      email: e.target.value,
-                    }));
-                  }}
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {type === 'signup' && (
+              <LabelInputs
+                label="username"
+                name="name"
+                placeholder="Enter your alias"
+                inputClassName="bg-[#333333] text-[#E5E5E5] border-2 border-[#404040] focus:border-[#d4a373] font-mono"
+                OnChange={handleChange}
+                
+              />
+            )}
 
-              {/* Password Input */}
-              <div>
-                <LabelInputs
-                  label={"password"}
-                  type={"password"}
-                  placeholder={"********"}
-                  OnChange={(e) => {
-                    setInputs((Inputs: userSignUpSchemaType) => ({
-                      ...Inputs,
-                      password: e.target.value,
-                    }));
-                  }}
-                />
-              </div>
+            <LabelInputs
+              label="email"
+              name="email"
+              type="email"
+              placeholder="operator@domain.com"
+              inputClassName="bg-[#333333] text-[#E5E5E5] border-2 border-[#404040] focus:border-[#d4a373] font-mono"
+              OnChange={handleChange}
+             
+            />
 
-              {/* Terms and Conditions Checkbox */}
+            <LabelInputs
+              label="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              inputClassName="bg-[#333333] text-[#E5E5E5] border-2 border-[#404040] focus:border-[#d4a373] font-mono"
+              OnChange={handleChange}
+              icon="🔒"
+            />
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full text-white bg-[#FF6B6B] hover:bg-[#FF5A5A] focus:ring-4 focus:outline-none focus:ring-[#FF6B6B] font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[#FF6B6B] dark:hover:bg-[#FF5A5A] dark:focus:ring-[#FF6B6B]"
+            <button
+              type="submit"
+              className="w-full bg-[#d4a373] hover:bg-[#E6B280] text-[#1A1A1A] font-pixel py-3 rounded-lg 
+                       transition-all hover:translate-y-[-2px] shadow-lg hover:shadow-[#d4a373]/20"
+            >
+              {type === 'signup' ? 'ACTIVATE_ACCOUNT' : 'INITIATE_LOGIN'}
+            </button>
+
+            <p className="text-center text-[#A3A3A3] font-mono text-sm">
+              {type === 'signup' ? 'Already registered? ' : 'New operator? '}
+              <Link
+                to={type === 'signup' ? '/signin' : '/signup'}
+                className="text-[#d4a373] hover:text-[#E6B280] underline"
               >
-               {type==='signup'?'Create An Account ': 'Login '}
-              </button>
+                {type === 'signup' ? 'AUTHENTICATE_HERE' : 'REQUEST_ACCESS'}
+              </Link>
+            </p>
+          </form>
+        </div>
 
-              {/* Login Link */}
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-             {type==='signup'?`   Already have an account?${" "}`:`Create An Account ${" "}`}
-                <Link
-                  to={type==='signup'?'/signIn':'/signup'}
-                  className="font-medium text-[#FF6B6B] hover:underline dark:text-[#FF6B6B]"
-                >
-                 {type==='signup'?'SignIn':"Signup"}
-                </Link>
-              </p>
-            </form>
+        {/* Visual Section */}
+        <div className="hidden lg:flex flex-col justify-between bg-[#2D2D2D]/50 border-2 border-[#404040] rounded-xl p-8">
+          <div className="space-y-4">
+            <div className="w-fit p-4 rounded-lg bg-[#d4a373]/10 border border-[#d4a373]">
+              <span className="font-pixel text-4xl text-[#d4a373]">🛸</span>
+            </div>
+            <h2 className="font-pixel text-2xl text-[#E5E5E5]">
+              Developer Nexus
+            </h2>
+          </div>
+
+          <div className="space-y-4 border-t border-[#404040] pt-6">
+            <div className="flex gap-4">
+              <div className="flex-1 bg-[#333333] p-4 rounded-lg border-2 border-[#404040]">
+                <h3 className="font-pixel text-[#d4a373] mb-2">12k+</h3>
+                <p className="text-[#A3A3A3] font-mono text-sm">Developers</p>
+              </div>
+              <div className="flex-1 bg-[#333333] p-4 rounded-lg border-2 border-[#404040]">
+                <h3 className="font-pixel text-[#d4a373] mb-2">127k+</h3>
+                <p className="text-[#A3A3A3] font-mono text-sm">Posts</p>
+              </div>
+            </div>
+            
+            <p className="text-[#A3A3A3] font-mono text-sm leading-relaxed">
+              Join our network of developers creating meaningful content and 
+              pushing the boundaries of technical communication.
+            </p>
           </div>
         </div>
       </div>

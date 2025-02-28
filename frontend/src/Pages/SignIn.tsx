@@ -3,11 +3,11 @@ import SignupForm from "../Components/SignupForm"
 
 const SignIn = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2">
+    <div className="bg-[#1A1A1A] ">
     <SignupForm type={"signin"}/>
-    <div className="hidden lg:block">
+    {/* <div className="hidden lg:block">
     <Quotes/>
-    </div>
+    </div> */}
     
 </div>
   )

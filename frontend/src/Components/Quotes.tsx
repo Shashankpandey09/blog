@@ -1,13 +1,21 @@
+// Quotes component with dark theme
+// Quotes component
 const Quotes = () => {
   return (
-    <div className="h-screen bg-[#F5F5F5] flex justify-center items-center">
-        <section className="w-3/4 ">
-        <p className="text-[#313131] text-3xl lg:text-4xl font-semibold leading-relaxed ">
-        "Blogging is not just about sharing your voice; it's about creating a conversation that inspires and empowers others."
-        </p>
-        <p className="mt-2 opacity-[0.8] text-right italic  "> – Sarah Johnson</p>
-        </section>
+    <div className="h-screen bg-[#1A1A1A] flex justify-center items-center border-l-2 border-[#404040]">
+      <section className="w-3/4">
+        <div className="border-2 border-[#d4a373] p-8 rounded-xl bg-[#2D2D2D]/50 backdrop-blur-sm">
+          <p className="text-[#E5E5E5] font-pixel text-3xl lg:text-4xl leading-relaxed animate-glow pixel-text">
+            "BLOGGING: NOT JUST SHARING<br/>
+            BUT CREATING WORLDS WHERE<br/>
+            IDEAS COLLIDE & EMPOWER!"
+          </p>
+          <p className="mt-6 text-[#A3A3A3] font-pixel text-right text-xl animate-pulse">
+            {'>>'} SARAH_JOHNSON
+          </p>
+        </div>
+      </section>
     </div>
-  )
-}
+  );
+};
 export default Quotes
