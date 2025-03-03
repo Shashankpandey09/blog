@@ -15,7 +15,8 @@ export default {
       },
       animation: {
         'glow': 'glow 2s ease-in-out infinite',
-        'typewriter': 'typewriter 1.5s steps(40) forwards'
+        'typewriter': 'typewriter 1.5s steps(40) forwards',
+        typewriter: 'typewriter 3s steps(var(--steps)) forwards'
       }
     },
   },

@@ -1,17 +1,27 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import LabelInputs from "./Labelnput";
 import { userSignInSchemaType, userSignUpSchemaType } from "@shashankpandey/blogscommon";
+import { useAuthStore } from "../store/User";
+import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
 const SignupForm = ({ type }: { type: 'signup' | 'signin' }) => {
   const [inputs, setInputs] = useState<userSignUpSchemaType | userSignInSchemaType>({
     name: "",
     email: "",
     password: "",
   });
-
-  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+  const navigate=useNavigate();
+const {token,loading,SignUp,login}=useAuthStore()
+useEffect(()=>{
+  if (token?.length!==0 && token!=null){
+    navigate('/blogs');
+  }
+},[token])
+  const handleSubmit = async(e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(inputs, e.target);
+      type=="signup"?await SignUp(inputs):await login(inputs);
+     
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +30,8 @@ const SignupForm = ({ type }: { type: 'signup' | 'signin' }) => {
   };
 
   return (
-    <section className="h-screen bg-[#1A1A1A] flex items-center justify-center p-6">
+    <section className="h-screen bg-[#1A1A1A] flex items-center justify-center relative p-6">
+      {loading && <Loader/>}
       <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Form Section */}
         <div className="bg-[#2D2D2D] border-2 border-[#404040] rounded-xl p-8 hover:border-[#d4a373] transition-colors">
@@ -67,15 +78,17 @@ const SignupForm = ({ type }: { type: 'signup' | 'signin' }) => {
               placeholder="••••••••"
               inputClassName="bg-[#333333] text-[#E5E5E5] border-2 border-[#404040] focus:border-[#d4a373] font-mono"
               OnChange={handleChange}
-              icon="🔒"
+           
             />
 
             <button
               type="submit"
-              className="w-full bg-[#d4a373] hover:bg-[#E6B280] text-[#1A1A1A] font-pixel py-3 rounded-lg 
-                       transition-all hover:translate-y-[-2px] shadow-lg hover:shadow-[#d4a373]/20"
+              disabled={loading}
+              className={`w-full bg-[#d4a373] hover:bg-[#E6B280]  text-[#1A1A1A] font-pixel py-3 rounded-lg 
+             ${loading?'opacity-50 cursor-not-allowed':''} transition-all hover:translate-y-[-2px] shadow-lg hover:shadow-[#d4a373]/20`}
             >
               {type === 'signup' ? 'ACTIVATE_ACCOUNT' : 'INITIATE_LOGIN'}
+
             </button>
 
             <p className="text-center text-[#A3A3A3] font-mono text-sm">

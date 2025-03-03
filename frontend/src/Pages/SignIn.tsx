@@ -1,4 +1,4 @@
-import Quotes from "../Components/Quotes"
+
 import SignupForm from "../Components/SignupForm"
 
 const SignIn = () => {

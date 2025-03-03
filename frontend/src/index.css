@@ -15,9 +15,6 @@
   .pixel-text {
     text-shadow: 2px 2px 0 #404040;
   }
-  @tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .typewriter {
   overflow: hidden;
@@ -25,6 +22,21 @@
   animation: typewriter 3s steps(var(--steps)) forwards;
 }
 
-.pixel-text {
-  text-shadow: 2px 2px 0 #404040;
+@keyframes spin-pixel {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-spin-pixel {
+  animation: spin-pixel 0.8s linear infinite;
+  animation-timing-function: steps(24, end);
+}
+
+.animate-blink {
+  animation: blink 1.2s ease-in-out infinite;
 }
