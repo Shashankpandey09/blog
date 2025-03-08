@@ -34,6 +34,7 @@ export const useAuthStore=create<authStore>((set)=>({
             set({token:data.token,loading:false})
         } catch (error:any) {
          console.log('error',error.message)
+         set({loading:false})
         }
     },
     logout:()=>set({token:null,loading:false})
