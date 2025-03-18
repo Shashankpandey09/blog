@@ -12,7 +12,7 @@ const SignupForm = ({ type }: { type: 'signup' | 'signin' }) => {
     password: "",
   });
   const navigate=useNavigate();
-const {token,loading,SignUp,login}=useAuthStore()
+const {token,loading,SignUp,login}=useAuthStore();
 useEffect(()=>{
   if (token?.length!==0 && token!=null){
     navigate('/blogs');
