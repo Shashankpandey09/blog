@@ -1,16 +1,22 @@
 // src/pages/Blogs.tsx
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { BlogStore } from "../store/Blogs";
 
 const Blogs = () => {
-  const blogs = Array.from({ length: 9 }, (_, i) => ({
-    id: i + 1,
-    title: `The Art of Code Crafting: Volume ${i + 1}`,
-    excerpt: "Exploring the intersection of game design principles and modern technical writing...",
-    date: new Date().toISOString().split('T')[0],
-    readTime: `${Math.floor(Math.random() * 10 + 5)} min`,
-    category: i % 3 === 0 ? "Engineering" : i % 2 === 0 ? "Design" : "Strategy"
-  }));
+  const {blogs,getBlogs}=BlogStore();
+  useEffect(()=>{
+    getBlogs();
+  },[])
+  console.log(blogs);
+  // const blogs = Array.from({ length: 9 }, (_, i) => ({
+  //   id: i + 1,
+  //   title: `The Art of Code Crafting: Volume ${i + 1}`,
+  //   excerpt: "Exploring the intersection of game design principles and modern technical writing...",
+  //   date: new Date().toISOString().split('T')[0],
+  //   readTime: `${Math.floor(Math.random() * 10 + 5)} min`,
+  //   category: i % 3 === 0 ? "Engineering" : i % 2 === 0 ? "Design" : "Strategy"
+  // }));
 
   return (
     <div className="min-h-screen bg-[#1A1A1A] text-[#E5E5E5] font-mono">
@@ -70,7 +76,7 @@ const Blogs = () => {
 
             {/* Blog Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {blogs.map((blog) => (
+              {/* {blogs.map((blog) => (
                 <article 
                   key={blog.id}
                   className="group relative bg-[#2D2D2D] rounded-xl border border-[#404040] hover:border-[#d4a373] transition-all duration-300 hover:-translate-y-1"
@@ -107,11 +113,11 @@ const Blogs = () => {
                       >
                         <span className="font-pixel">VIEW</span>
                         <span className="text-xl">→</span>
-                      </Link>
-                    </div>
+                      </Link> */}
+                    {/* </div>
                   </div>
                 </article>
-              ))}
+              ))} */}
             </div>
 
             {/* Pagination */}

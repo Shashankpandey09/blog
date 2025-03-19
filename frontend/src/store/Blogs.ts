@@ -1,5 +1,6 @@
 import axios from "axios";
 import { create } from "zustand";
+import { useAuthStore } from "./User";
 
 
 interface BlogsType{
@@ -14,8 +15,14 @@ export const BlogStore=create<BlogsType>((set)=>({
     getBlogs:async()=>{
         try {
             set({loading:true});
-            const res=await axios.get(`${BACKEND_URL}/blogs`)
-            set({blogs:res.data,loading:false})
+            const token=useAuthStore.getState().token
+            const res=await axios.get(`${BACKEND_URL}/api/v1/blog/bulk`,{
+                headers:{
+                    "Content-Type":"application/json",
+                    'Authorization':`Bearer ${token}`
+                }
+            })
+            set({blogs:res.data.response.blogs,loading:false})
         } catch (error) {
             
         }
