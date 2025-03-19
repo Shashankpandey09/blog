@@ -1,22 +1,49 @@
 // src/pages/CreateBlog.tsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { blog_categories } from "../assets/Constants";
+
+interface postType {
+  title: string;
+  content: string;
+  category: string[];
+}
 
 const CreateBlog = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<postType>({
     title: "",
     content: "",
-    category: "TECH",
+    category: [],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
+    // Add your submission logic here
+    console.log("Form submitted:", formData);
+  };
+
+  const mainCategories = blog_categories.map(cat => cat[0]);
+
+  const handleCategoryAdd = (value: string) => {
+    if (!value) return;
+    
+    setFormData(prev => ({
+      ...prev,
+      category: prev.category.includes(value) 
+        ? prev.category 
+        : [...prev.category, value]
+    }));
+  };
+
+  const handleCategoryRemove = (categoryToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      category: prev.category.filter(cat => cat !== categoryToRemove)
+    }));
   };
 
   return (
     <div className="min-h-screen bg-[#1A1A1A] text-[#E5E5E5] font-mono">
-      {/* Navigation */}
       <nav className="border-b border-[#404040] py-4 px-6 lg:px-12">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           <Link to="/" className="font-pixel text-2xl text-[#d4a373] hover:text-[#E6B280] transition-colors">
@@ -35,7 +62,6 @@ const CreateBlog = () => {
 
       <main className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
         <div className="grid lg:grid-cols-[1fr_400px] gap-12">
-          {/* Editor Section */}
           <div className="space-y-8">
             <h1 className="font-pixel text-4xl text-[#d4a373] mb-8">
               NEW_BLOG_POST
@@ -60,14 +86,35 @@ const CreateBlog = () => {
                   CATEGORY
                 </label>
                 <select
-                  value={formData.category}
-                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  value=""
+                  onChange={(e) => handleCategoryAdd(e.target.value)}
                   className="w-full bg-[#2D2D2D] border border-[#404040] rounded-lg px-4 py-3 text-[#E5E5E5] focus:outline-none focus:border-[#d4a373] appearance-none"
                 >
-                  {['TECH', 'DESIGN', 'GAMING', 'PHILOSOPHY'].map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
+                  <option >Select a category</option>
+                  {mainCategories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
                   ))}
                 </select>
+                
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {formData.category.map((cat) => (
+                    <div 
+                      key={cat} 
+                      className="px-3 py-1 rounded-full bg-[#d4a373]/20 text-[#d4a373] flex items-center gap-2"
+                    >
+                      <span>{cat}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleCategoryRemove(cat)}
+                        className="hover:text-[#E6B280] text-sm"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div>
@@ -99,31 +146,34 @@ const CreateBlog = () => {
             </form>
           </div>
 
-          {/* Preview Section */}
-          <div className="bg-[#2D2D2D] border-l border-[#404040] p-8 space-y-8">
+          <div className="bg-[#2D2D2D] border-l hidden md:block  border-[#404040] p-4 space-y-8">
             <h2 className="font-pixel text-2xl text-[#d4a373]">PREVIEW</h2>
             
-            <div className="space-y-6">
+            <div className="space-y-6 overflow-y-auto max-h-[100vh]">
               <h3 className="text-xl font-semibold text-[#E5E5E5]">
                 {formData.title || "Untitled Post"}
               </h3>
               
-              <div className="flex items-center gap-4 text-[#A3A3A3] text-sm">
-                <span className="px-3 py-1 rounded-full bg-[#d4a373]/20 text-[#d4a373]">
-                  {formData.category}
-                </span>
+              <div className="flex flex-wrap items-center gap-4 text-[#A3A3A3] text-sm">
+                {formData.category.map((cat) => (
+                  <span 
+                    key={cat} 
+                    className="px-3 py-1 rounded-full bg-[#d4a373]/20 text-[#d4a373]"
+                  >
+                    {cat}
+                  </span>
+                ))}
                 <span>DRAFT PREVIEW</span>
               </div>
 
-              <div className="prose max-w-none text-[#A3A3A3]">
+              <p className="prose  max-w-none text-[#A3A3A3] ">
                 {formData.content || "Start writing to see the preview..."}
-              </div>
+              </p>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-[#404040] mt-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8">
           <div className="flex justify-between text-[#A3A3A3] text-sm">

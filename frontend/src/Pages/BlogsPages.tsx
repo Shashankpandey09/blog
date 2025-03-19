@@ -2,31 +2,29 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { BlogStore } from "../store/Blogs";
+import RenderBlogs from "../Components/RenderBlogs";
 
 const Blogs = () => {
-  const {blogs,getBlogs}=BlogStore();
-  useEffect(()=>{
+  const { blogs, getBlogs } = BlogStore();
+  useEffect(() => {
     getBlogs();
-  },[])
-  console.log(blogs);
-  // const blogs = Array.from({ length: 9 }, (_, i) => ({
-  //   id: i + 1,
-  //   title: `The Art of Code Crafting: Volume ${i + 1}`,
-  //   excerpt: "Exploring the intersection of game design principles and modern technical writing...",
-  //   date: new Date().toISOString().split('T')[0],
-  //   readTime: `${Math.floor(Math.random() * 10 + 5)} min`,
-  //   category: i % 3 === 0 ? "Engineering" : i % 2 === 0 ? "Design" : "Strategy"
-  // }));
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#1A1A1A] text-[#E5E5E5] font-mono">
       <nav className="border-b border-[#404040] py-4 px-6 lg:px-12">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <Link to="/" className="font-pixel text-2xl text-[#d4a373] hover:text-[#E6B280] transition-colors">
+          <Link
+            to="/"
+            className="font-pixel text-2xl text-[#d4a373] hover:text-[#E6B280] transition-colors"
+          >
             DEV_ARCADE
           </Link>
           <div className="flex items-center space-x-8">
-            <Link to="/create" className="text-[#A3A3A3] hover:text-[#d4a373] transition-colors">
+            <Link
+              to="/create"
+              className="text-[#A3A3A3] hover:text-[#d4a373] transition-colors"
+            >
               NEW_POST+
             </Link>
             <div className="w-10 h-10 rounded-full bg-[#d4a373]/20 border border-[#d4a373] flex items-center justify-center">
@@ -41,10 +39,12 @@ const Blogs = () => {
           {/* Sidebar */}
           <aside className="space-y-8">
             <div className="bg-[#2D2D2D] p-6 rounded-xl border border-[#404040]">
-              <h3 className="font-pixel text-xl text-[#d4a373] mb-4">FILTERS</h3>
+              <h3 className="font-pixel text-xl text-[#d4a373] mb-4">
+                FILTERS
+              </h3>
               <div className="space-y-3">
-                {['All', 'Engineering', 'Design', 'Strategy'].map((cat) => (
-                  <button 
+                {["All", "Engineering", "Design", "Strategy"].map((cat) => (
+                  <button
                     key={cat}
                     className="w-full text-left px-4 py-2 rounded-lg hover:bg-[#404040] transition-colors text-[#A3A3A3]"
                   >
@@ -67,57 +67,20 @@ const Blogs = () => {
           {/* Main Content */}
           <div className="space-y-12">
             <div className="bg-gradient-to-r from-[#2D2D2D] to-[#1A1A1A] p-8 rounded-2xl border border-[#404040]">
-              <h1 className="font-pixel text-4xl text-[#d4a373] mb-4">CODE_CHRONICLES</h1>
+              <h1 className="font-pixel text-4xl text-[#d4a373] mb-4">
+                CODE_CHRONICLES
+              </h1>
               <p className="text-[#A3A3A3] max-w-2xl">
-                Curated collection of technical essays bridging game design philosophy 
-                with modern software development practices.
+                Curated collection of technical essays bridging game design
+                philosophy with modern software development practices.
               </p>
             </div>
 
             {/* Blog Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {/* {blogs.map((blog) => (
-                <article 
-                  key={blog.id}
-                  className="group relative bg-[#2D2D2D] rounded-xl border border-[#404040] hover:border-[#d4a373] transition-all duration-300 hover:-translate-y-1"
-                >
-                  <div className="p-6 space-y-4">
-                    <div className="flex justify-between items-start">
-                      <span className={`px-3 py-1 rounded-full text-sm ${
-                        blog.category === 'Engineering' 
-                          ? 'bg-[#d4a373]/20 text-[#d4a373]' 
-                          : blog.category === 'Design' 
-                          ? 'bg-[#A3A3A3]/20 text-[#A3A3A3]' 
-                          : 'bg-[#404040] text-[#E5E5E5]'
-                      }`}>
-                        {blog.category}
-                      </span>
-                      <span className="text-[#A3A3A3] text-sm">{blog.date}</span>
-                    </div>
-                    
-                    <h2 className="text-xl font-semibold leading-snug">
-                      {blog.title}
-                    </h2>
-                    
-                    <p className="text-[#A3A3A3] line-clamp-3">
-                      {blog.excerpt}
-                    </p>
-                    
-                    <div className="flex items-center justify-between pt-4">
-                      <span className="text-sm text-[#d4a373]">
-                        {blog.readTime} READ
-                      </span>
-                      <Link 
-                        to={`/blog/${blog.id}`} 
-                        className="flex items-center gap-2 text-[#A3A3A3] hover:text-[#d4a373] transition-colors"
-                      >
-                        <span className="font-pixel">VIEW</span>
-                        <span className="text-xl">→</span>
-                      </Link> */}
-                    {/* </div>
-                  </div>
-                </article>
-              ))} */}
+              {(blogs ?? []).map((blog) => {
+                return <RenderBlogs blog={blog} />;
+              })}
             </div>
 
             {/* Pagination */}
@@ -126,9 +89,9 @@ const Blogs = () => {
                 <button
                   key={page}
                   className={`px-4 py-2 rounded-lg ${
-                    page === 1 
-                      ? 'bg-[#d4a373] text-[#1A1A1A]' 
-                      : 'bg-[#2D2D2D] text-[#A3A3A3] hover:bg-[#404040]'
+                    page === 1
+                      ? "bg-[#d4a373] text-[#1A1A1A]"
+                      : "bg-[#2D2D2D] text-[#A3A3A3] hover:bg-[#404040]"
                   } transition-colors`}
                 >
                   {page}
@@ -143,7 +106,9 @@ const Blogs = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[#A3A3A3]">
             <div>
-              <h4 className="font-pixel text-lg text-[#d4a373] mb-4">NAVIGATE</h4>
+              <h4 className="font-pixel text-lg text-[#d4a373] mb-4">
+                NAVIGATE
+              </h4>
               <div className="space-y-2">
                 <p>Documentation</p>
                 <p>API Reference</p>

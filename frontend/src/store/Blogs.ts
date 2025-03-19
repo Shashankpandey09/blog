@@ -4,7 +4,7 @@ import { useAuthStore } from "./User";
 
 
 interface BlogsType{
-    blogs:Array<object>,
+    blogs:object[]
     loading:Boolean,
     getBlogs:()=>Promise<void>
 }
