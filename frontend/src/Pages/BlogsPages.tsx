@@ -79,7 +79,7 @@ const Blogs = () => {
             {/* Blog Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {(blogs ?? []).map((blog) => {
-                return <RenderBlogs blog={blog} />;
+                return <RenderBlogs  blog={blog} />;
               })}
             </div>
 

@@ -1,25 +1,29 @@
 // src/pages/CreateBlog.tsx
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { ChangeEvent, useState } from "react";
+import { Link, useNavigate} from "react-router-dom";
 import { blog_categories } from "../assets/Constants";
+import { createPost } from "../store/Post";
+import { blogSchemaType } from "@shashankpandey/blogscommon";
 
-interface postType {
-  title: string;
-  content: string;
-  category: string[];
-}
 
 const CreateBlog = () => {
-  const [formData, setFormData] = useState<postType>({
+  const [formData, setFormData] = useState<blogSchemaType>({
     title: "",
     content: "",
-    category: [],
+    published:false,
+    tags: [],
+    
   });
+  const navigate=useNavigate();
+  const {loading}=createPost();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e:ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const newFormData={...formData,published:true}
+    const success=await createPost.getState().post(newFormData);
     // Add your submission logic here
-    console.log("Form submitted:", formData);
+    if(success){
+    navigate('/blogs')}
   };
 
   const mainCategories = blog_categories.map(cat => cat[0]);
@@ -27,18 +31,18 @@ const CreateBlog = () => {
   const handleCategoryAdd = (value: string) => {
     if (!value) return;
     
-    setFormData(prev => ({
+    setFormData((prev:blogSchemaType) => ({
       ...prev,
-      category: prev.category.includes(value) 
-        ? prev.category 
-        : [...prev.category, value]
+      tags: prev.tags.includes(value) 
+        ? prev.tags 
+        : [...prev.tags, value]
     }));
   };
 
   const handleCategoryRemove = (categoryToRemove: string) => {
-    setFormData(prev => ({
+    setFormData((prev:blogSchemaType) => ({
       ...prev,
-      category: prev.category.filter(cat => cat !== categoryToRemove)
+      tags: prev.tags.filter((cat:string) => cat !== categoryToRemove)
     }));
   };
 
@@ -74,6 +78,7 @@ const CreateBlog = () => {
                 </label>
                 <input
                   type="text"
+                  required
                   value={formData.title}
                   onChange={(e) => setFormData({...formData, title: e.target.value})}
                   className="w-full bg-[#2D2D2D] border border-[#404040] rounded-lg px-4 py-3 text-[#E5E5E5] focus:outline-none focus:border-[#d4a373] transition-colors"
@@ -83,14 +88,14 @@ const CreateBlog = () => {
 
               <div>
                 <label className="block text-[#A3A3A3] text-sm mb-2">
-                  CATEGORY
+                  tags
                 </label>
                 <select
-                  value=""
+                 
                   onChange={(e) => handleCategoryAdd(e.target.value)}
                   className="w-full bg-[#2D2D2D] border border-[#404040] rounded-lg px-4 py-3 text-[#E5E5E5] focus:outline-none focus:border-[#d4a373] appearance-none"
                 >
-                  <option >Select a category</option>
+                  <option >Select a tags</option>
                   {mainCategories.map((cat) => (
                     <option key={cat} value={cat}>
                       {cat}
@@ -99,7 +104,7 @@ const CreateBlog = () => {
                 </select>
                 
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {formData.category.map((cat) => (
+                  {formData.tags.map((cat:string) => (
                     <div 
                       key={cat} 
                       className="px-3 py-1 rounded-full bg-[#d4a373]/20 text-[#d4a373] flex items-center gap-2"
@@ -122,6 +127,7 @@ const CreateBlog = () => {
                   CONTENT
                 </label>
                 <textarea
+                  required
                   value={formData.content}
                   onChange={(e) => setFormData({...formData, content: e.target.value})}
                   className="w-full h-96 bg-[#2D2D2D] border border-[#404040] rounded-lg px-4 py-3 text-[#E5E5E5] focus:outline-none focus:border-[#d4a373] transition-colors resize-none"
@@ -130,14 +136,29 @@ const CreateBlog = () => {
               </div>
 
               <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="bg-[#d4a373] text-[#1A1A1A] font-pixel px-8 py-3 rounded-lg hover:bg-[#E6B280] transition-colors"
-                >
-                  PUBLISH_POST
-                </button>
+              <button
+  type="submit"
+  disabled={loading}
+  className={`bg-[#d4a373] text-[#1A1A1A] font-pixel px-8 py-3  rounded-lg hover:bg-[#E6B280] transition-colors flex items-center justify-center gap-2`}
+>
+  {loading ? (
+    <div className="flex items-center">
+      <span
+        className="h-6 w-6 border-2 border-[#1A1A1A] border-t-transparent rounded-full animate-spin"
+        aria-label="Loading"
+      ></span>
+    </div>
+  ) : (
+    "PUBLISH_POST"
+  )}
+</button>
                 <button
                   type="button"
+                  onClick={()=>setFormData({ title: "",
+                    content: "",
+                    tags: [],
+                    published:false
+                  })}
                   className="border border-[#404040] text-[#A3A3A3] px-8 py-3 rounded-lg hover:border-[#d4a373] hover:text-[#d4a373] transition-colors"
                 >
                   DISCARD
@@ -155,7 +176,7 @@ const CreateBlog = () => {
               </h3>
               
               <div className="flex flex-wrap items-center gap-4 text-[#A3A3A3] text-sm">
-                {formData.category.map((cat) => (
+                {formData.tags.map((cat:string) => (
                   <span 
                     key={cat} 
                     className="px-3 py-1 rounded-full bg-[#d4a373]/20 text-[#d4a373]"
