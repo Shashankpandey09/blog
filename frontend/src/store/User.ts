@@ -13,6 +13,7 @@ const BACKEND_URL:string=import.meta.env.VITE_BACKEND_URL
 export const useAuthStore=create<authStore>((set)=>({
     token:null,
     loading:false,
+    
     SignUp:async(payload)=>{
         try {
             set({loading:true})

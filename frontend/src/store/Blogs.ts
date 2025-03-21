@@ -1,10 +1,11 @@
 import axios from "axios";
 import { create } from "zustand";
 import { useAuthStore } from "./User";
+import { BlogsTYPE } from "../Pages/BlogsPages";
 
 
 interface BlogsType{
-    blogs:object[]
+    blogs:BlogsTYPE[]
     loading:Boolean,
     getBlogs:()=>Promise<void>
 }

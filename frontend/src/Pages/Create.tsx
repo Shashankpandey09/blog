@@ -129,9 +129,10 @@ const CreateBlog = () => {
                 <textarea
                   required
                   value={formData.content}
-                  onChange={(e) => setFormData({...formData, content: e.target.value})}
+                  onChange={(e) => setFormData({...formData, content: `${e.target.value}`})}
                   className="w-full h-96 bg-[#2D2D2D] border border-[#404040] rounded-lg px-4 py-3 text-[#E5E5E5] focus:outline-none focus:border-[#d4a373] transition-colors resize-none"
                   placeholder="Write your masterpiece..."
+                  style={{ whiteSpace: "pre-wrap" }}
                 />
               </div>
 
@@ -154,13 +155,14 @@ const CreateBlog = () => {
 </button>
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={()=>setFormData({ title: "",
                     content: "",
                     tags: [],
                     published:false
                   })}
-                  className="border border-[#404040] text-[#A3A3A3] px-8 py-3 rounded-lg hover:border-[#d4a373] hover:text-[#d4a373] transition-colors"
-                >
+                  className={`border border-[#404040] ${loading?'opacity-50':''} text-[#A3A3A3] px-8 py-3 rounded-lg hover:border-[#d4a373] hover:text-[#d4a373] transition-colors`
+                  }>
                   DISCARD
                 </button>
               </div>

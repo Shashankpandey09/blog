@@ -3,15 +3,26 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { BlogStore } from "../store/Blogs";
 import RenderBlogs from "../Components/RenderBlogs";
+import { blogSchemaType } from "@shashankpandey/blogscommon";
+import Skeleton from "../Components/Skeleton";
+interface Tags{
+  id:number;
+  tagName:string;
+}
+export interface BlogsTYPE extends blogSchemaType{
+  id:number;
+  authorId:number;
+  tags:Tags[];
+}
 
 const Blogs = () => {
-  const { blogs, getBlogs } = BlogStore();
+  const { blogs, getBlogs,loading} = BlogStore();
   useEffect(() => {
     getBlogs();
   }, []);
 
-  return (
-    <div className="min-h-screen bg-[#1A1A1A] text-[#E5E5E5] font-mono">
+  return (<>
+    {loading?<Skeleton/>:<div className="min-h-screen bg-[#1A1A1A] text-[#E5E5E5] font-mono">
       <nav className="border-b border-[#404040] py-4 px-6 lg:px-12">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           <Link
@@ -43,9 +54,9 @@ const Blogs = () => {
                 FILTERS
               </h3>
               <div className="space-y-3">
-                {["All", "Engineering", "Design", "Strategy"].map((cat) => (
+                {["All", "Engineering", "Design", "Strategy"].map((cat,index) => (
                   <button
-                    key={cat}
+                    key={index}
                     className="w-full text-left px-4 py-2 rounded-lg hover:bg-[#404040] transition-colors text-[#A3A3A3]"
                   >
                     {cat}
@@ -79,7 +90,7 @@ const Blogs = () => {
             {/* Blog Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {(blogs ?? []).map((blog) => {
-                return <RenderBlogs  blog={blog} />;
+                return <RenderBlogs key={blog.id}  blog={blog} />;
               })}
             </div>
 
@@ -134,7 +145,8 @@ const Blogs = () => {
           </div>
         </div>
       </footer>
-    </div>
+    </div>}
+    </>
   );
 };
 
