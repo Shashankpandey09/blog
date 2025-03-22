@@ -32,7 +32,7 @@ const Blog = () => {
     );
   }
 
-  const readTime = Math.ceil(blog.Content.length / 180);
+  const readTime = blog && Math.ceil(blog.content?.length / 180);
 
   return (
     <div className="min-h-screen bg-[#1A1A1A] text-[#E5E5E5] font-mono">
@@ -114,7 +114,7 @@ const Blog = () => {
             className="prose prose-invert max-w-none text-[#E5E5E5]"
           >
             <div
-              dangerouslySetInnerHTML={{ __html: blog.Content }}
+              dangerouslySetInnerHTML={{ __html: blog.content }}
               className="space-y-6 text-pretty text-justify"
             />  
           </motion.section>

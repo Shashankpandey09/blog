@@ -4,15 +4,19 @@ import { useAuthStore } from "./User";
 import { BlogsTYPE } from "../Pages/BlogsPages";
 
 
+
 interface BlogsType{
-    blogs:BlogsTYPE[]
+    blogs:null|BlogsTYPE[]
     loading:Boolean,
-    getBlogs:()=>Promise<void>
+    lastFetched:number,
+    getBlogs:()=>Promise<void>,
+    invalidate:()=>void
 }
 const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
 export const BlogStore=create<BlogsType>((set)=>({
-    blogs:[],
+    blogs:null,
     loading:false,
+    lastFetched:0,
     getBlogs:async()=>{
         try {
             set({loading:true});
@@ -23,9 +27,13 @@ export const BlogStore=create<BlogsType>((set)=>({
                     'Authorization':`Bearer ${token}`
                 }
             })
-            set({blogs:res.data.response.blogs,loading:false})
+            set({blogs:res.data.response.blogs,loading:false,lastFetched:Date.now()})
+         
         } catch (error) {
             
         }
+    },
+    invalidate:()=>{
+        set({lastFetched:0});
     }
 }))
