@@ -5,7 +5,8 @@ import { blogSchemaType } from '@shashankpandey/blogscommon'
 interface someMOre  {
     loading:boolean,
     error:string|null,
-    status:number|null
+    status:number|null,
+    success:Boolean
     post:(payload:blogSchemaType)=>Promise<boolean>
 }
 const BACKEND_URL=import.meta.env.VITE_BACKEND_URL
@@ -13,6 +14,7 @@ export const createPost=create<someMOre>((set)=>({
     loading:false,
     error:null,
     status:null,
+    success:false,
     post:async(payload)=>{
         set({loading:true})
         try {
@@ -25,7 +27,7 @@ export const createPost=create<someMOre>((set)=>({
                 }
                 
             })
-            set({loading:false,status:res.status})
+            set({loading:false,status:res.status,success:true})
             return true;
             
         } catch (error:any) {

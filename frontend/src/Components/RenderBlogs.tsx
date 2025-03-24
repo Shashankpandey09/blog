@@ -31,7 +31,7 @@ const RenderBlogs = ({ blog }: { blog: BlogsTYPE } ) => {
 
         <div className="flex items-center justify-between pt-4">
           <span className="text-sm text-[#d4a373]">
-            {Math.ceil(blog.content?.length||0 / 180)} min READ
+            {Math.ceil(blog.content?.length / 180)} min READ
             <br />
             <h6 className="text-[#A3A3A3] text-sm">
               {blog.createdAt.split("T")[0]}
