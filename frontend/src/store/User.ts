@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { userSignInSchemaType, userSignUpSchemaType } from "@shashankpandey/blogscommon";
 import axios from "axios";
+import { ToastStore } from "./Toast";
 interface authStore{
     token:string|null;
     loading:boolean;
@@ -21,6 +22,7 @@ export const useAuthStore=create<authStore>((set)=>({
             const data=res.data;
             console.log(data)
             set({token:data.token,loading:false})
+            ToastStore.getState().showToast({message:'User created Successfully',variant:'success',duration:3000})
 
         } catch (error:any) {
 

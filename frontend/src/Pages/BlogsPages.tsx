@@ -6,7 +6,8 @@ import RenderBlogs from "../Components/RenderBlogs";
 import { blogSchemaType } from "@shashankpandey/blogscommon";
 import Skeleton from "../Components/Skeleton";
 import Toaster from "../Components/Toaster";
-import { createPost } from "../store/Post";
+import { ToastStore } from "../store/Toast";
+
 interface Tags {
   id: number;
   tagName: string;
@@ -24,14 +25,14 @@ const Blogs = () => {
     if(isStale)
       getBlogs();
   }, []);
- const success=createPost.getState().success;
+   const message=ToastStore.getState().toast.message
   return (
     <>
       {loading ? (
         <Skeleton />
       ) : (
         <div className="min-h-screen relative bg-[#1A1A1A] text-[#E5E5E5] font-mono">
-          {success&& <Toaster message={"Post created successfully"} variant={'success'} duration={30000}/>}
+          {message&& <Toaster />}
           <nav className="border-b border-[#404040] py-4 px-6 lg:px-12">
             <div className="flex items-center justify-between max-w-7xl mx-auto">
               <Link

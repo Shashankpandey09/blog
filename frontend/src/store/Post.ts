@@ -2,11 +2,11 @@ import {create} from 'zustand'
 import axios from 'axios'
 import { useAuthStore } from './User'
 import { blogSchemaType } from '@shashankpandey/blogscommon'
+import { ToastStore } from './Toast'
 interface someMOre  {
     loading:boolean,
     error:string|null,
     status:number|null,
-    success:Boolean
     post:(payload:blogSchemaType)=>Promise<boolean>
 }
 const BACKEND_URL=import.meta.env.VITE_BACKEND_URL
@@ -27,7 +27,8 @@ export const createPost=create<someMOre>((set)=>({
                 }
                 
             })
-            set({loading:false,status:res.status,success:true})
+            set({loading:false,status:res.status})
+            ToastStore.getState().showToast({message:'Post Created Successfully ',variant:'success',duration:3000})
             return true;
             
         } catch (error:any) {
