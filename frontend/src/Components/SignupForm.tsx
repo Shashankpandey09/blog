@@ -14,9 +14,9 @@ const SignupForm = ({ type }: { type: 'signup' | 'signin' }) => {
   const navigate=useNavigate();
 const {token,loading,SignUp,login}=useAuthStore();
 useEffect(()=>{
-  if (token?.length!==0 && token!=null){
-    navigate('/blogs');
-  }
+ if(token)
+    navigate('/blogs',{replace:true});
+  
 },[token])
   const handleSubmit = async(e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();

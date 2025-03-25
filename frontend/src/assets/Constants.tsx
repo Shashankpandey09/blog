@@ -21,3 +21,24 @@ export const blog_categories =
     ["Relationships", "Dating advice", "Marriage tips", "Family dynamics"],
     ["Art & Design", "Creative work", "Design inspiration", "Art tutorials"]
 ]
+ export const variantStyles = {
+    success: {
+      text: "text-green-700",
+      icon: "✅",
+      border: "border-[#404040]",
+      gradient: "from-[#2D2D2D] to-[#1A1A1A]",
+    },
+    error: {
+      text: "text-red-700",
+      icon: "❌",
+      border: "border-[#404040]",
+      gradient: "from-[#2D2D2D] to-[#1A1A1A]",
+    },
+
+    info: {
+      text: "text-blue-700",
+      icon: "ℹ️",
+      border: "border-[#404040]",
+      gradient: "from-[#2D2D2D] to-[#1A1A1A]",
+    }
+}

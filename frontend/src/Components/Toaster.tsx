@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ToastStore } from "../store/Toast";
+import { variantStyles } from "../assets/Constants";
 
 type ToastVar = "success" | "error" | "info";
-
 
 const Toaster: React.FC = () => {
  const {toast,clearToast}=ToastStore()
@@ -14,31 +14,10 @@ const Toaster: React.FC = () => {
       setIsVisible(false);
       clearToast()
     },toast.duration);
-    return () => {clearTimeout(timer);
-      
-    }
+    return () => {clearTimeout(timer);}
   }, [toast.duration]);
-  const variantStyles = {
-    success: {
-      text: "text-green-700",
-      icon: "✅",
-      border: "border-[#404040]",
-      gradient: "from-[#2D2D2D] to-[#1A1A1A]",
-    },
-    error: {
-      text: "text-red-700",
-      icon: "❌",
-      border: "border-[#404040]",
-      gradient: "from-[#2D2D2D] to-[#1A1A1A]",
-    },
 
-    info: {
-      text: "text-blue-700",
-      icon: "ℹ️",
-      border: "border-[#404040]",
-      gradient: "from-[#2D2D2D] to-[#1A1A1A]",
-    },
-  };
+ 
   return (
     <AnimatePresence>
       {isVisible && toast.message && (
