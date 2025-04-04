@@ -18,5 +18,6 @@ exports.blogSchema = zod_1.z.object({
     title: zod_1.z.string().min(1, { message: "Title Required" }),
     content: zod_1.z.string().min(1, { message: 'content required' }),
     Thumbnail: zod_1.z.any().optional(),
-    published: zod_1.z.boolean()
+    published: zod_1.z.boolean(),
+    tags: zod_1.z.string().array().optional()
 });

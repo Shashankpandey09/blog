@@ -24,7 +24,7 @@ model Blog{
   id Int @id @default(autoincrement())
   authorId Int  
   title String
-  Content String
+  content String @map("Content")
   Thumbnail String?
   published Boolean @default(false)
   createdAt DateTime @default(now())

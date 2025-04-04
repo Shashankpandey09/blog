@@ -18,6 +18,7 @@ export const blogSchema=z.object({
     title:z.string().min(1,{message:"Title Required"}),
     content:z.string().min(1,{message:'content required'}),
     Thumbnail:z.any().optional(),
-    published:z.boolean()
+    published:z.boolean(),
+    tags:z.string().array().optional()
 })
 export type blogSchemaType=z.infer<typeof blogSchema>

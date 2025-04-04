@@ -4,6 +4,7 @@ import { UserRouter } from "./routes/user";
 import { blogRouter } from "./routes/blog";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
+import { cors } from "hono/cors";
 
 // 1. Define proper types
 type AppVariables = {
@@ -40,6 +41,7 @@ app.use("*", async (c, next) => {
   // Continue to the next middleware/route
   await next();
 });
+app.use("*",cors())
 
 // 4. Routes
 app.get("/", (c) => c.text("Hello from Hono!"));

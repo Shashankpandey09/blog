@@ -29,15 +29,18 @@ export declare const blogSchema: z.ZodObject<{
     content: z.ZodString;
     Thumbnail: z.ZodOptional<z.ZodAny>;
     published: z.ZodBoolean;
+    tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
 }, "strip", z.ZodTypeAny, {
     title: string;
     content: string;
     published: boolean;
     Thumbnail?: any;
+    tags?: string[] | undefined;
 }, {
     title: string;
     content: string;
     published: boolean;
     Thumbnail?: any;
+    tags?: string[] | undefined;
 }>;
 export type blogSchemaType = z.infer<typeof blogSchema>;

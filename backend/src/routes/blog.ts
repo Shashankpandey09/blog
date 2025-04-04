@@ -66,7 +66,7 @@ blogRouter.post("/", async (c) => {
       data: {
         authorId: id,
         title: body.title,
-        Content: body.content,
+        content: body.content,
         Thumbnail: body.Thumbnail,
         published: body.published,
         tags:{
@@ -108,7 +108,7 @@ blogRouter.put("/:id", async (c) => {
         }
       }
     }) 
-    const currentTagsNames=currentTags?.map((data)=>(data.tagName))
+    const currentTagsNames=(currentTags??[]).map((data)=>(data.tagName))
     const tagsToAdd =newTags?.filter((tag)=>currentTagsNames.indexOf(tag)===-1);
     const TagstoRemove=currentTagsNames?.filter((tagname)=>newTags?.indexOf(tagname)===-1)
 
@@ -125,7 +125,7 @@ blogRouter.put("/:id", async (c) => {
       where: { id: Number(id), authorId: Number(payload.id) },
       data: {
         title: body.title,
-        Content: body.content,
+        content: body.content,
         Thumbnail: body.Thumbnail,
         published: body.published,
         tags:{
@@ -158,7 +158,7 @@ blogRouter.put("/:id", async (c) => {
 blogRouter.get("/bulk", async (c) => {
   const prisma = c.get("prisma");
   const page=c.req.query("page")||1;
-  const limit=c.req.query("limit")||5;
+  const limit=c.req.query("limit")||6;
  // checking for input validation
  if(Number(page) < 1||Number(limit) < 1){
   c.status(400)
