@@ -5,6 +5,7 @@ import { ToastStore } from "./Toast";
 interface authStore{
     token:string|null;
     loading:boolean;
+    userId:number|null
 SignUp:(payload:userSignUpSchemaType)=>Promise<void>;
 login:(payload:userSignInSchemaType)=>Promise<void>
 logout:()=>void
@@ -14,14 +15,14 @@ const BACKEND_URL:string=import.meta.env.VITE_BACKEND_URL
 export const useAuthStore=create<authStore>((set)=>({
     token:null,
     loading:false,
-    
+    userId:null,
     SignUp:async(payload)=>{
         try {
             set({loading:true})
             const res=await axios.post(`${BACKEND_URL}/api/v1/user/signup`,payload)
             const data=res.data;
             console.log(data)
-            set({token:data.token,loading:false})
+            set({token:data.token,loading:false,userId:Number(res.data?.user?.id)})
             ToastStore.getState().showToast({message:'User created Successfully',variant:'success',duration:3000})
 
         } catch (error:any) {
@@ -34,7 +35,7 @@ export const useAuthStore=create<authStore>((set)=>({
             set({ loading: true,});
             const res=await axios.post(`${BACKEND_URL}/api/v1/user/signin`,payload)
             const data=res.data;
-            set({token:data.token,loading:false})
+            set({token:data.token,loading:false,userId:Number(res.data?.user?.id)})
         } catch (error:any) {
          console.log('error',error.message)
          set({loading:false})

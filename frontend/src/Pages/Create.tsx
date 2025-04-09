@@ -5,6 +5,7 @@ import { blog_categories } from "../assets/Constants";
 import { createPost } from "../store/Post";
 import { blogSchemaType } from "@shashankpandey/blogscommon";
 import { BlogStore } from "../store/Blogs";
+import BasicLoader from "../Components/BasicLoader";
 
 const CreateBlog = () => {
   const [formData, setFormData] = useState<blogSchemaType>({
@@ -148,16 +149,7 @@ const CreateBlog = () => {
                   disabled={loading}
                   className={`bg-[#d4a373] text-[#1A1A1A] font-pixel px-8 py-3  rounded-lg hover:bg-[#E6B280] transition-colors flex items-center justify-center gap-2`}
                 >
-                  {loading ? (
-                    <div className="flex items-center">
-                      <span
-                        className="h-6 w-6 border-2 border-[#1A1A1A] border-t-transparent rounded-full animate-spin"
-                        aria-label="Loading"
-                      ></span>
-                    </div>
-                  ) : (
-                    "PUBLISH_POST"
-                  )}
+                 <BasicLoader loading={loading} label="PUBLISH_POST"/>
                 </button>
                 <button
                   type="button"

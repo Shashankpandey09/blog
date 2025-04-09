@@ -3,12 +3,16 @@ import axios from 'axios'
 import { useAuthStore } from './User'
 import { blogSchemaType } from '@shashankpandey/blogscommon'
 import { ToastStore } from './Toast'
+import { BlogStore } from './Blogs'
+
 interface someMOre  {
     loading:boolean,
     error:string|null,
     status:number|null,
-    post:(payload:blogSchemaType)=>Promise<boolean>
+    post:(payload:blogSchemaType)=>Promise<boolean>,
+    del:(payload:string|undefined)=>Promise<boolean>
 }
+const token=useAuthStore.getState().token
 const BACKEND_URL=import.meta.env.VITE_BACKEND_URL
 export const createPost=create<someMOre>((set)=>({
     loading:false,
@@ -18,8 +22,6 @@ export const createPost=create<someMOre>((set)=>({
     post:async(payload)=>{
         set({loading:true})
         try {
-          
-            const token=useAuthStore.getState().token
           const res=  await axios.post(`${BACKEND_URL}/api/v1/blog`,payload,{
                 headers:{
                     "Content-Type":"application/json",
@@ -34,6 +36,32 @@ export const createPost=create<someMOre>((set)=>({
         } catch (error:any) {
             set({loading:false,error:error.message,status:error.response?.status||500}) 
               return false;
+        }
+    },
+    del:async(payload)=>{
+        set({loading:true})  
+        try {
+            await axios.delete(`${BACKEND_URL}/api/v1/blog/delete/${payload}`,{
+                headers:{
+                    "Content-Type":"Application/json",
+                    'Authorization':`Bearer ${useAuthStore.getState().token}`
+                }
+               
+            }
+            
+        )
+        set({loading:false})
+        ToastStore.getState().showToast({message:'Post Deleted Successfully',variant:'success',duration:3000})
+        BlogStore.setState({lastFetched:0});
+
+        
+        return true;
+        } catch (error) {
+            set({loading:false})
+            console.log(error)
+            ToastStore.getState().showToast({message:'error occurred',variant:'error',duration:3000})
+            return false;
+           
         }
     }
 }

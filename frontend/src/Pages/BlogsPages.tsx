@@ -19,13 +19,16 @@ export interface BlogsTYPE extends blogSchemaType {
 }
 
 const Blogs = () => {
-  const { blogs, getBlogs, loading,lastFetched } = BlogStore();
+  const { blogs, getBlogs, loading,lastFetched,data } = BlogStore();
   useEffect(() => {
-    const isStale=!lastFetched||Date.now()-lastFetched>300000
-    if(isStale)
-      getBlogs();
+    const isStale=!lastFetched||(Date.now()-lastFetched)>=300000
+    const controller=new AbortController()
+    if(isStale){getBlogs(controller.signal);}
+    return ()=>controller.abort();
+    
   }, []);
    const message=ToastStore.getState().toast.message
+   console.log(data)
   return (
     <>
       {loading ? (

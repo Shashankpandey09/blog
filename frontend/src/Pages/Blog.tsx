@@ -1,19 +1,30 @@
 // src/pages/SingleBlog.tsx
 import { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { BlogStore } from "../store/Blogs";
 import { motion } from "framer-motion";
 import { FiArrowLeft, FiClock, FiTag, FiUser } from "react-icons/fi";
 import { BlogsTYPE } from "./BlogsPages";
+import { createPost } from "../store/Post";
+import { useAuthStore } from "../store/User";
+import BasicLoader from "../Components/BasicLoader";
 
 const Blog = () => {
   const { id } = useParams<{ id: string }>();
   const { blogs, getBlogs } = BlogStore.getState();
   const blog:BlogsTYPE|undefined = blogs?.find((b:BlogsTYPE) => b.id === Number(id));
+  const {del,loading}=createPost();
+  const {userId}=useAuthStore();
+  const navigate=useNavigate()
   
   useEffect(() => {
     if (!blogs) getBlogs();
   }, []);
+  const handleDel=async()=>{
+  const success=  await del(id);
+  if (success) navigate('/blogs')
+
+  }
 
   if (!blog) {
     return (
@@ -79,6 +90,7 @@ const Blog = () => {
                 <FiTag className="text-[#d4a373]" />
                 {new Date(blog.createdAt).toLocaleDateString()}
               </span>
+             {blog?.authorId==userId &&  <button onClick={handleDel} className="bg-[#d4a373] text-[#1A1A1A] font-pixel px-8 py-1  rounded-md hover:bg-[#E6B280] transition-colors flex items-center justify-center gap-2" ><BasicLoader loading={loading} label={"DELETE"}/></button>}
             </motion.div>
 
             <motion.h1

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ToastStore } from "../store/Toast";
 import { variantStyles } from "../assets/Constants";
@@ -8,20 +8,23 @@ type ToastVar = "success" | "error" | "info";
 const Toaster: React.FC = () => {
  const {toast,clearToast}=ToastStore()
  const variant:ToastVar=toast.variant
-  const [isVisible, setIsVisible] = useState(true);
   useEffect(() => {
+  if(!toast.message) return
+    
     const timer = setTimeout(() => {
-      setIsVisible(false);
       clearToast()
     },toast.duration);
-    return () => {clearTimeout(timer);}
-  }, [toast.duration]);
+  
+    return () =>clearTimeout(timer)
+    
+  }, [toast.duration,toast.message]);
 
- 
+ console.log(toast.message)
   return (
     <AnimatePresence>
-      {isVisible && toast.message && (
+      { toast.message && (
         <motion.div
+        key={Date.now()}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, x: 100 }}
@@ -43,7 +46,7 @@ const Toaster: React.FC = () => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setIsVisible(false);
+                clearToast();
               }}
               className="text-[#d4a373] hover:text-[#E6B280] transition-colors"
               aria-label="Close toast"
