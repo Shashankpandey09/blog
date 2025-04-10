@@ -4,6 +4,8 @@ import { useAuthStore } from './User'
 import { blogSchemaType } from '@shashankpandey/blogscommon'
 import { ToastStore } from './Toast'
 import { BlogStore } from './Blogs'
+import { PageStore } from './Pagination'
+
 
 interface someMOre  {
     loading:boolean,
@@ -12,7 +14,7 @@ interface someMOre  {
     post:(payload:blogSchemaType)=>Promise<boolean>,
     del:(payload:string|undefined)=>Promise<boolean>
 }
-const token=useAuthStore.getState().token
+
 const BACKEND_URL=import.meta.env.VITE_BACKEND_URL
 export const createPost=create<someMOre>((set)=>({
     loading:false,
@@ -25,11 +27,12 @@ export const createPost=create<someMOre>((set)=>({
           const res=  await axios.post(`${BACKEND_URL}/api/v1/blog`,payload,{
                 headers:{
                     "Content-Type":"application/json",
-                    "Authorization":`Bearer ${token}`
+                    "Authorization":`Bearer ${useAuthStore.getState().token}`
                 }
                 
             })
             set({loading:false,status:res.status})
+            PageStore.getState().setCurrent_page(1);
             ToastStore.getState().showToast({message:'Post Created Successfully ',variant:'success',duration:3000})
             return true;
             
@@ -58,7 +61,7 @@ export const createPost=create<someMOre>((set)=>({
         return true;
         } catch (error) {
             set({loading:false})
-            console.log(error)
+           
             ToastStore.getState().showToast({message:'error occurred',variant:'error',duration:3000})
             return false;
            

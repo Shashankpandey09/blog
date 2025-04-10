@@ -5,7 +5,7 @@ import { BlogsTYPE } from "../Pages/BlogsPages";
 
 
 const RenderBlogs = ({ blog }: { blog: BlogsTYPE } ) => {
-  // console.log(blog)
+
   return (
     <article
       

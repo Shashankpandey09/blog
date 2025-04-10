@@ -14,7 +14,7 @@ const Blog = () => {
   const { blogs, getBlogs } = BlogStore.getState();
   const blog:BlogsTYPE|undefined = blogs?.find((b:BlogsTYPE) => b.id === Number(id));
   const {del,loading}=createPost();
-  const {userId}=useAuthStore();
+  const {userId,name}=useAuthStore();
   const navigate=useNavigate()
   
   useEffect(() => {
@@ -80,7 +80,7 @@ const Blog = () => {
             >
               <span className="flex items-center gap-1">
                 <FiUser className="text-[#d4a373]" />
-                { "Anonymous Coder"}
+                { name||"Anonymous Coder"}
               </span>
               <span className="flex items-center gap-1">
                 <FiClock className="text-[#d4a373]" />
@@ -125,7 +125,7 @@ const Blog = () => {
             transition={{ delay: 0.5 }}
             className="prose prose-invert max-w-none text-[#E5E5E5]"
           >
-            <div
+            <article
               dangerouslySetInnerHTML={{ __html: blog.content }}
               className="space-y-6 text-pretty text-justify"
             />  

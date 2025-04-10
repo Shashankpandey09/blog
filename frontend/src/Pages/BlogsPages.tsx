@@ -7,6 +7,8 @@ import { blogSchemaType } from "@shashankpandey/blogscommon";
 import Skeleton from "../Components/Skeleton";
 import Toaster from "../Components/Toaster";
 import { ToastStore } from "../store/Toast";
+import PaginationComp from "../Components/PaginationComp";
+import { PageStore } from "../store/Pagination";
 
 interface Tags {
   id: number;
@@ -20,15 +22,16 @@ export interface BlogsTYPE extends blogSchemaType {
 
 const Blogs = () => {
   const { blogs, getBlogs, loading,lastFetched,data } = BlogStore();
+  const {currentPage}=PageStore()
   useEffect(() => {
     const isStale=!lastFetched||(Date.now()-lastFetched)>=300000
     const controller=new AbortController()
     if(isStale){getBlogs(controller.signal);}
     return ()=>controller.abort();
     
-  }, []);
+  }, [currentPage]);
    const message=ToastStore.getState().toast.message
-   console.log(data)
+
   return (
     <>
       {loading ? (
@@ -85,7 +88,7 @@ const Blogs = () => {
                     STATS
                   </h3>
                   <div className="space-y-2 text-[#A3A3A3]">
-                    <p>Total Posts: 127</p>
+                    <p>Total Posts: {data?.totalBlogs}</p>
                     <p>Avg. Read Time: 8min</p>
                     <p>Engagement: 89%</p>
                   </div>
@@ -113,18 +116,7 @@ const Blogs = () => {
 
                 {/* Pagination */}
                 <div className="flex justify-center gap-4">
-                  {[1, 2, 3, 4].map((page) => (
-                    <button
-                      key={page}
-                      className={`px-4 py-2 rounded-lg ${
-                        page === 1
-                          ? "bg-[#d4a373] text-[#1A1A1A]"
-                          : "bg-[#2D2D2D] text-[#A3A3A3] hover:bg-[#404040]"
-                      } transition-colors`}
-                    >
-                      {page}
-                    </button>
-                  ))}
+               <PaginationComp/>
                 </div>
               </div>
             </div>

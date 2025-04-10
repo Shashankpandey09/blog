@@ -19,7 +19,7 @@ const Toaster: React.FC = () => {
     
   }, [toast.duration,toast.message]);
 
- console.log(toast.message)
+
   return (
     <AnimatePresence>
       { toast.message && (
